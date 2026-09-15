@@ -1,0 +1,3 @@
+interface:
+  display_name: "Mercury Agents"
+  short_description: "Token-efficient code planning and implementation"
