@@ -12,14 +12,14 @@ Optimize total tokens across planning, execution, handoffs, and corrections. Pre
 | Evidence from the task | Workflow |
 |---|---|
 | Local, obvious change; no interface or design decision | Inspect → implement → verify |
-| Related files require exploration; architecture is established | Repository plan → implement → verify |
-| Cross-cutting behavior, public interfaces, or unresolved architectural tradeoffs | Architecture decision → repository plan → implement → verify |
+| Related files require exploration; architecture is established | Initial plan → plan refinement → implement → verify |
+| Cross-cutting behavior, public interfaces, or unresolved architectural tradeoffs | Architecture plan → plan refinement → implement → verify |
 
 File count alone does not determine complexity. Resolve uncertainty with a targeted inspection before adding a planning stage. Reuse an existing plan after checking its assumptions against current code.
 
 Stages are responsibilities, not mandatory separate agents. Stay in one agent when delegation would duplicate exploration or when delegation is unavailable or disallowed. Delegate only bounded independent work that can proceed alongside useful local work and whose benefit justifies its context overhead; dependent stages remain local when the runtime requires independent subtasks. Avoid overlapping file ownership.
 
-When model selection is supported and permitted, the source workflow's preferred roles are Astra at low effort for architecture, Sol at medium for repository planning, and Terra at medium for implementation. Treat these as preferences, not required model availability or price rankings. Honor the user's model choice and runtime constraints; use the current model when selection is unavailable. Never claim to switch models without an actual supported dispatch.
+When model selection is supported and permitted, prefer GPT-6 Astra at low effort for the initial plan, GPT-6 Sol at medium effort to refine that plan against repository evidence, and GPT-6 Luna at xhigh effort for implementation and verification. Use the exact model identifiers `gpt-6-astra`, `gpt-6-sol`, and `gpt-6-luna` when dispatching. Treat these as preferences, not required model availability or price rankings. Honor the user's model choice and runtime constraints; use the current model when selection is unavailable. Never claim to switch models without an actual supported dispatch.
 
 ## Acquire evidence once
 
@@ -29,9 +29,9 @@ Batch independent searches and bound output to relevant matches or ranges. If ou
 
 ## Plan only unresolved decisions
 
-For architecture work, identify the strategy, affected boundaries, invariants, compatibility constraints, and acceptance criteria. Keep exact file enumeration for repository planning.
+For the initial plan, identify the strategy, affected boundaries, invariants, compatibility constraints, and acceptance criteria. Keep exact file enumeration for plan refinement.
 
-Ground the implementation plan in actual files and symbols. Repository evidence overrides upstream proposals: correct nonexistent abstractions or incompatible assumptions before coding.
+Refine the plan against actual files and symbols. Repository evidence overrides the initial plan: correct nonexistent abstractions or incompatible assumptions before coding.
 
 Keep one compact working brief, in context or a workspace artifact when handoff or resumption warrants it:
 
@@ -58,13 +58,13 @@ Run checks appropriate to the change and repository requirements; inspect the fi
 
 After these checks, add a focused plan-adherence review when risk or complexity leaves meaningful gaps: interacting changes across components, public-interface or compatibility changes, security/concurrency/transactional behavior, or acceptance criteria poorly covered by automated checks. Skip this extra stage for local, obvious changes adequately verified by those checks. File count alone is not a trigger.
 
-For this review, prefer Luna at high effort when model selection and delegation are supported and permitted; otherwise perform the same focused pass locally. Honor the model and dispatch constraints above. The optional sequence is Sol plan → Terra implementation → deterministic checks → Luna review. An existing validated plan can serve the same role as Sol's output.
+For this review, prefer GPT-6 Luna at xhigh effort when model selection and delegation are supported and permitted; otherwise perform the same focused pass locally. Honor the model and dispatch constraints above. The sequence is Astra initial plan → Sol plan refinement → Luna implementation and deterministic checks → Luna review when warranted. An existing validated plan can replace the planning stages when its assumptions still hold.
 
 Give the reviewer only the user requirements and constraints, validated plan, final diff or its accessible pointer, relevant file access, and check results. Review the actual implementation for omitted requirements, incomplete behavior, scope drift, and consequential verification gaps. Treat the plan as a hypothesis: flag conflicts with repository evidence or user requirements rather than demanding blind compliance. Keep this pass read-only and focused; it does not replace specialized review required by the task.
 
 Return only actionable findings with severity, file/symbol, evidence, and the unmet requirement or invariant. If none are found, state that briefly with any material coverage limits; do not imply proof of correctness or repeat the plan.
 
-Route implementation findings to Terra, or the current implementer, for correction and relevant checks. Recheck affected findings and dependent behavior rather than restarting the entire review. Send invalid planning assumptions or new design decisions to Sol, or the current planner; involve architecture only if the strategy changes. Stop the review loop when findings are resolved and relevant checks pass. If a finding remains blocked or recurs without new evidence, report the unresolved issue instead of cycling through agents.
+Route implementation findings to Luna, or the current implementer, for correction and relevant checks. Recheck affected findings and dependent behavior rather than restarting the entire review. Send invalid planning assumptions or new design decisions to Sol, or the current planner; involve Astra only if the strategy changes. Stop the review loop when findings are resolved and relevant checks pass. If a finding remains blocked or recurs without new evidence, report the unresolved issue instead of cycling through agents.
 
 ## Finish
 
