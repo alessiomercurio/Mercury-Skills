@@ -107,7 +107,7 @@ Start with `mercury-analyze` for a detailed explanation of one paper, `mercury-c
 - Supply readable source files or accessible links for analysis, and local PDFs or Markdown for comparison and research implementation.
 - PDF extraction, browsing, code execution, and delegation depend on the tools and permissions available in your Codex environment. These skills provide instructions; they do not install those capabilities.
 - `mercury-research-wiki` can start empty, ingest papers over time, and answer from its linked pages. It maps papers' reference implementations, not the user's application code.
-- `mercury-agents` prefers `gpt-6-astra` at low effort for the initial plan, `gpt-6-sol` at medium effort for plan refinement, and `gpt-6-luna` at xhigh effort for implementation and verification. It supports single-agent execution; separate agents and model selection are used only when available and permitted.
+- `mercury-agents` prefers `gpt-6-astra` at low effort for the initial plan, `gpt-6-sol` at high effort for plan refinement, and `gpt-6-luna` at xhigh effort for implementation and verification. It supports single-agent execution; separate agents and model selection are used only when available and permitted.
 - Analysis and comparison distinguish reported findings from independent evaluation. Ask explicitly if you also want critique or recommendations.
 - Implementation distinguishes source-reported details from engineering choices. Local checks do not establish reproduction of published benchmark results.
 - Reducing redundant context is a workflow objective; no measured token savings or benchmark improvements are claimed.

@@ -19,7 +19,7 @@ File count alone does not determine complexity. Resolve uncertainty with a targe
 
 Stages are responsibilities, not mandatory separate agents. Stay in one agent when delegation would duplicate exploration or when delegation is unavailable or disallowed. Delegate only bounded independent work that can proceed alongside useful local work and whose benefit justifies its context overhead; dependent stages remain local when the runtime requires independent subtasks. Avoid overlapping file ownership.
 
-When model selection is supported and permitted, prefer GPT-6 Astra at low effort for the initial plan, GPT-6 Sol at medium effort to refine that plan against repository evidence, and GPT-6 Luna at xhigh effort for implementation and verification. Use the exact model identifiers `gpt-6-astra`, `gpt-6-sol`, and `gpt-6-luna` when dispatching. Treat these as preferences, not required model availability or price rankings. Honor the user's model choice and runtime constraints; use the current model when selection is unavailable. Never claim to switch models without an actual supported dispatch.
+When model selection is supported and permitted, prefer GPT-6 Astra at low effort for the initial plan, GPT-6 Sol at high effort to refine that plan against repository evidence, and GPT-6 Luna at xhigh effort for implementation and verification. Use the exact model identifiers `gpt-6-astra`, `gpt-6-sol`, and `gpt-6-luna` when dispatching. Treat these as preferences, not required model availability or price rankings. Honor the user's model choice and runtime constraints; use the current model when selection is unavailable. Never claim to switch models without an actual supported dispatch.
 
 ## Acquire evidence once
 
