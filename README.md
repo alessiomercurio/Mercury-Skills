@@ -2,7 +2,9 @@
 
 # Mercury Skills
 
-A collection of Codex skills for understanding scientific papers, comparing research, maintaining a research wiki, and turning methods into working code.
+A collection of agent skills for understanding scientific papers, comparing research, maintaining a research wiki, and turning methods into working code.
+
+The skills follow the open `SKILL.md` format and do not depend on a specific harness or model: they work with Codex, Claude Code, and other agents that load skills.
 
 Mercury connects research and implementation through source references, explicit assumptions, and focused verification. Each skill can be invoked separately; use them together when your task spans the full workflow.
 
@@ -16,7 +18,7 @@ Mercury connects research and implementation through source references, explicit
 | [mercury-code-research](mercury-code-research/SKILL.md) | Translate selected research methods into a grounded implementation plan and local code changes. | A saved plan, implementation, and verification results. |
 | [mercury-agents](mercury-agents/SKILL.md) | Plan, refine, implement, and verify code changes while reducing redundant exploration and handoffs. | Code changes with a concise verification summary. |
 
-`mercury-code-research` requires `mercury-agents`. Analysis, comparison, and the research wiki can be used independently or as inputs to implementation.
+`mercury-code-research` uses `mercury-agents` for execution when it is installed and otherwise implements directly in the current agent. Analysis, comparison, and the research wiki can be used independently or as inputs to implementation.
 
 ## Installation
 
@@ -24,24 +26,26 @@ Replace `alessiomercurio/Mercury-Skills` below with this repository's GitHub own
 
 ### With npx
 
-With Node.js and npm installed, use the [Vercel Labs skills CLI](https://github.com/vercel-labs/skills) to install all five skills for Codex across your projects:
+With Node.js and npm installed, use the [Vercel Labs skills CLI](https://github.com/vercel-labs/skills) to install all five skills across your projects. Pass the agent you use with `--agent` (for example `codex` or `claude-code`); repeat it to install for several agents:
 
 ```bash
-npx skills add alessiomercurio/Mercury-Skills --agent codex --skill '*' --global
+npx skills add alessiomercurio/Mercury-Skills --agent <agent> --skill '*' --global
 ```
+
+For example, `--agent codex --agent claude-code` installs for both.
 
 Omit `--global` to install into the current project.
 
 To choose which skills to install interactively:
 
 ```bash
-npx skills add alessiomercurio/Mercury-Skills --agent codex --global
+npx skills add alessiomercurio/Mercury-Skills --agent <agent> --global
 ```
 
-To install only the research implementation workflow and its required dependency:
+To install only the research implementation workflow and its execution skill:
 
 ```bash
-npx skills add alessiomercurio/Mercury-Skills --agent codex --skill mercury-code-research mercury-agents --global
+npx skills add alessiomercurio/Mercury-Skills --agent <agent> --skill mercury-code-research mercury-agents --global
 ```
 
 To list available skills without installing:
@@ -54,18 +58,20 @@ npx skills add alessiomercurio/Mercury-Skills --list
 
 ### Manual installation
 
-Download or clone this repository and copy the five `mercury-*` folders into:
+Download or clone this repository and copy the five `mercury-*` folders into your agent's skill directory:
 
-- `~/.agents/skills/` for personal use across projects.
-- `.agents/skills/` inside a repository for project-specific use.
+| Agent | Personal (all projects) | Project-specific |
+| --- | --- | --- |
+| Codex | `~/.agents/skills/` | `.agents/skills/` |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
 
-Each installed skill folder must contain its `SKILL.md` and `agents/openai.yaml`. Codex detects skill changes automatically; restart it if a skill does not appear.
+For other agents, use the skill location from their documentation. Each skill folder needs its `SKILL.md`; `agents/openai.yaml` only adds display metadata for Codex and is ignored elsewhere. Restart the agent if a skill does not appear.
 
-See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills) for discovery locations and installation guidance.
+See the [Codex skill documentation](https://learn.chatgpt.com/docs/build-skills) or the [Claude Code skill documentation](https://docs.claude.com/en/docs/claude-code/skills) for discovery locations and installation guidance.
 
 ## Usage
 
-Invoke a skill by name in Codex and provide the relevant files, locations, and desired outcome. Responses follow your requested language, or the language of your request.
+Invoke a skill by name and provide the relevant files, locations, and desired outcome. Responses follow your requested language, or the language of your request. The examples use Codex syntax (`$mercury-analyze`); in Claude Code type `/mercury-analyze`. Agents can also select a skill automatically from its description.
 
 ### Understand a paper
 
@@ -105,9 +111,19 @@ $mercury-agents Fix the pagination bug in this repository and run the relevant c
 Start with `mercury-analyze` for a detailed explanation of one paper, `mercury-compare` for a synthesis across papers, or `mercury-research-wiki` to accumulate sourced findings and map papers to their reference code. Go directly to `mercury-code-research` when the implementation scope is already clear.
 
 - Supply readable source files or accessible links for analysis, and local PDFs or Markdown for comparison and research implementation.
-- PDF extraction, browsing, code execution, and delegation depend on the tools and permissions available in your Codex environment. These skills provide instructions; they do not install those capabilities.
+- PDF extraction, browsing, code execution, and delegation depend on the tools and permissions available in your agent environment. These skills provide instructions; they do not install those capabilities.
 - `mercury-research-wiki` can start empty, ingest papers over time, and answer from its linked pages. It maps papers' reference implementations, not the user's application code.
-- `mercury-agents` prefers `gpt-6-astra` at low effort for the initial plan, `gpt-6-sol` at high effort for plan refinement, and `gpt-6-luna` at xhigh effort for implementation and verification. It supports single-agent execution; separate agents and model selection are used only when available and permitted.
+- `mercury-agents` organizes work into abstract **Planner**, **Refiner**, **Implementer**, and **Reviewer** roles. It names no models: by default every role runs with the current model in a single agent. To assign models, effort levels, or subagents to roles, declare the binding outside the skill, for example in your project's `AGENTS.md` or `CLAUDE.md`:
+
+  ```markdown
+  ## Mercury role bindings
+  - Planner: <fast model or agent>
+  - Refiner: <strong reasoning model>, high effort
+  - Implementer: <coding model or agent>
+  - Reviewer: <subagent name>, read-only
+  ```
+
+  Bindings are used only when available and permitted; otherwise the current model performs the role.
 - Analysis and comparison distinguish reported findings from independent evaluation. Ask explicitly if you also want critique or recommendations.
 - Implementation distinguishes source-reported details from engineering choices. Local checks do not establish reproduction of published benchmark results.
 - Reducing redundant context is a workflow objective; no measured token savings or benchmark improvements are claimed.

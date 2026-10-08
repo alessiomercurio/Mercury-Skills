@@ -13,14 +13,14 @@ Use the user's request to choose setup, ingest, code mapping, query, or lint. In
 
 For an existing wiki, read `wiki/index.md` first, then relevant pages and recent log entries. Use text search as needed; embeddings and a search service are optional, not prerequisites.
 
-In this workspace, use `papers/` for the paper files and `papers-code/` for the papers' reference code. Check these directories first when ingesting papers or mapping their implementations, and preserve their paths in provenance.
+If the workspace already keeps papers or their reference code in established directories (for example `papers/` and `papers-code/`), or its agent instructions file names them, use those directories instead of the defaults below. Check them first when ingesting papers or mapping implementations, and preserve their paths in provenance.
 
 ## Storage and schema
 
 For a new wiki, use this default layout, adapting it to existing conventions:
 
 ```text
-AGENTS.md
+<instructions file>     Agent instructions for this wiki (see below)
 raw/                    Original papers, supplements, and source snapshots
 wiki/
   index.md              Categorized page catalog with one-line descriptions
@@ -36,7 +36,7 @@ Create content directories as needed. Keep downloaded repository checkouts in a 
 
 Treat existing raw sources as immutable. Store extraction output separately; record source versions and retain older versions when new ones arrive. Never rewrite a paper or source snapshot to match the synthesis. Preserve manual edits and existing instructions.
 
-During setup, write or carefully extend `AGENTS.md` with the chosen layout, page conventions, provenance rules, workflows, and append-only logging rule. Do not overwrite unrelated instructions. Initialize an honest empty index and a dated setup log; do not invent sources or findings.
+During setup, write or carefully extend the agent instructions file used by the current harness, for example `AGENTS.md` or `CLAUDE.md`. Prefer a file that already exists at the wiki root; if several harnesses share the wiki, keep one canonical file and reference it from the others instead of duplicating rules. Record the chosen layout, page conventions, provenance rules, workflows, and append-only logging rule in it. Do not overwrite unrelated instructions. Initialize an honest empty index and a dated setup log; do not invent sources or findings.
 
 Use stable, descriptive filenames such as `2025-short-paper-title.md`. Use relative Markdown links compatible with Obsidian. Pages should carry YAML metadata:
 

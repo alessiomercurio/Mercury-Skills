@@ -61,7 +61,7 @@ Reuse prior decisions and approvals. Reopen a decision only when new evidence in
 
 ## Implement using Mercury Agents
 
-Locate `mercury-agents` in the skill catalog or local collection, commonly a sibling folder. Check availability during planning; read and follow it for execution once material decisions are resolved. It is a required dependency: if missing, complete the grounded plan and report the execution blocker instead of silently substituting another workflow or claiming it was invoked.
+Locate `mercury-agents` in the available skills or local collection, commonly a sibling folder. Check availability during planning; read and follow it for execution once material decisions are resolved. If it is unavailable, implement in the current agent with an inspect → implement → verify sequence driven by the saved plan, and state in the final report that `mercury-agents` was not used. Never claim it was invoked when it was not.
 
 Supply the grounded plan and resolved decisions as its existing working brief, together with user constraints, relevant source pointers or formulas, adaptations, target files, and expected checks. Preserve the decision and approval requirements above even when `mercury-agents` would otherwise take an inspect-and-implement shortcut. Reuse the plan rather than generating a duplicate. Follow its execution and verification guidance; using it does not require separate agents when delegation is unavailable or inappropriate.
 
