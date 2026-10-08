@@ -19,20 +19,28 @@ File count alone does not determine complexity. Resolve uncertainty with a targe
 
 Stages are responsibilities, not mandatory separate agents. Stay in one agent when delegation would duplicate exploration or when delegation is unavailable or disallowed. Delegate only bounded independent work that can proceed alongside useful local work and whose benefit justifies its context overhead; dependent stages remain local when the runtime requires independent subtasks. Avoid overlapping file ownership.
 
-## Roles and model bindings
+## Roles and model selection
 
 Stages map to four abstract roles. Each describes the capability a stage needs, not a specific model:
 
 | Role | Responsibility | Capability profile |
 |---|---|---|
-| **Planner** | Initial or architecture plan: strategy, boundaries, invariants, acceptance criteria | Fast and economical; light reasoning is enough |
+| **Planner** | Initial or architecture plan: strategy, boundaries, invariants, acceptance criteria | Economical for a routine initial plan; strongest reasoning for an architecture plan |
 | **Refiner** | Check the plan against actual files and symbols; resolve design decisions | Strong reasoning over code and evidence |
 | **Implementer** | Edit code, run deterministic checks, fix findings | Reliable code generation, long context, careful tool use |
-| **Reviewer** | Read-only plan-adherence review | Thorough critical reading; never edits |
+| **Reviewer** | Read-only plan-adherence review | Most capable critical reading; never edits |
 
-This skill does not choose models. Bind a role to a model, effort level, or agent only when the user, project instructions, or runtime configuration provides that binding, for example a named agent or model assignment for "planner" or "reviewer". Use the binding exactly as given and do not infer one from model names or memory. Without a binding, perform every role with the current model and agent; the capability profile then only guides how much effort each stage deserves when the runtime exposes such a setting.
+Choose the model for each role yourself: use the least capable available model that can reliably meet the role's profile and the actual difficulty of the work. Scale by the task, not the role name:
 
-Treat bindings as preferences constrained by availability and permissions. If a bound model or agent is unavailable, continue with the current one and mention the substitution. Never claim to switch models or dispatch an agent without an actual supported dispatch.
+- **Mechanical work** (clear spec, isolated change in one or two files, a plan step with no open decisions): a fast, economical model at low or medium effort.
+- **Integration and judgment** (multi-file coordination, debugging, adapting to existing patterns): a standard model at medium or high effort.
+- **Architecture, plan refinement with unresolved tradeoffs, and the final plan-adherence review**: the most capable available model at high effort. Do not let these default to the session model when a more capable one is available.
+
+Select only among models and effort levels the current runtime actually offers. Discover them from the runtime's tool definitions, documented aliases, or configuration; never copy model identifiers from memory, older sessions, or other skills. When you dispatch a subagent, set the model explicitly, and set the effort level explicitly as well when the runtime supports it, because an omitted value silently inherits the session's or the model's default.
+
+Explicit bindings take precedence over this choice. If the user, project instructions (such as `AGENTS.md` or `CLAUDE.md`), or runtime configuration assign a model, effort level, or named agent to a role, use that binding exactly. If a chosen or bound model is unavailable, use the closest available tier and mention the substitution.
+
+Model choice applies only to stages you actually delegate; work done locally runs on the current model. When the runtime offers no model selection, perform every role with the current model. Never claim to switch models or dispatch an agent without an actual supported dispatch.
 
 ## Acquire evidence once
 
@@ -71,7 +79,7 @@ Run checks appropriate to the change and repository requirements; inspect the fi
 
 After these checks, add a focused plan-adherence review when risk or complexity leaves meaningful gaps: interacting changes across components, public-interface or compatibility changes, security/concurrency/transactional behavior, or acceptance criteria poorly covered by automated checks. Skip this extra stage for local, obvious changes adequately verified by those checks. File count alone is not a trigger.
 
-Assign this review to the Reviewer role, delegated with fresh context when a binding or delegation is available and permitted; otherwise perform the same focused pass locally. The sequence is Planner initial plan → Refiner plan refinement → Implementer implementation and deterministic checks → Reviewer review when warranted. An existing validated plan can replace the planning stages when its assumptions still hold.
+Assign this review to the Reviewer role, delegated with fresh context on the most capable available model when delegation is available and permitted; otherwise perform the same focused pass locally. The sequence is Planner initial plan → Refiner plan refinement → Implementer implementation and deterministic checks → Reviewer review when warranted. An existing validated plan can replace the planning stages when its assumptions still hold.
 
 Give the reviewer only the user requirements and constraints, validated plan, final diff or its accessible pointer, relevant file access, and check results. Review the actual implementation for omitted requirements, incomplete behavior, scope drift, and consequential verification gaps. Treat the plan as a hypothesis: flag conflicts with repository evidence or user requirements rather than demanding blind compliance. Keep this pass read-only and focused; it does not replace specialized review required by the task.
 

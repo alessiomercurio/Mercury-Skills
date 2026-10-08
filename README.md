@@ -113,7 +113,7 @@ Start with `mercury-analyze` for a detailed explanation of one paper, `mercury-c
 - Supply readable source files or accessible links for analysis, and local PDFs or Markdown for comparison and research implementation.
 - PDF extraction, browsing, code execution, and delegation depend on the tools and permissions available in your agent environment. These skills provide instructions; they do not install those capabilities.
 - `mercury-research-wiki` can start empty, ingest papers over time, and answer from its linked pages. It maps papers' reference implementations, not the user's application code.
-- `mercury-agents` organizes work into abstract **Planner**, **Refiner**, **Implementer**, and **Reviewer** roles. It names no models: by default every role runs with the current model in a single agent. To assign models, effort levels, or subagents to roles, declare the binding outside the skill, for example in your project's `AGENTS.md` or `CLAUDE.md`:
+- `mercury-agents` organizes work into abstract **Planner**, **Refiner**, **Implementer**, and **Reviewer** roles. It names no models: when it delegates a stage, it chooses among the models your agent offers, using the least capable model that fits the work and the most capable one for architecture and the final review. To override that choice, declare role bindings outside the skill, for example in your project's `AGENTS.md` or `CLAUDE.md`:
 
   ```markdown
   ## Mercury role bindings
@@ -123,7 +123,7 @@ Start with `mercury-analyze` for a detailed explanation of one paper, `mercury-c
   - Reviewer: <subagent name>, read-only
   ```
 
-  Bindings are used only when available and permitted; otherwise the current model performs the role.
+  Bindings take precedence over the skill's own choice and are used only when available and permitted. Without model selection or delegation, the current model performs every role.
 - Analysis and comparison distinguish reported findings from independent evaluation. Ask explicitly if you also want critique or recommendations.
 - Implementation distinguishes source-reported details from engineering choices. Local checks do not establish reproduction of published benchmark results.
 - Reducing redundant context is a workflow objective; no measured token savings or benchmark improvements are claimed.
